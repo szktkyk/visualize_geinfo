@@ -6,7 +6,7 @@ import dash_mantine_components as dmc
 from utils.data_utils import *
 from utils.schema_utils import VISIBLE_COLUMNS, FILTER_TYPE_DICT
 from utils import layout_utils
-from utils.chart_utils import fig1_and_fig2, fig3_and_fig4, fig1
+from utils.chart_utils import fig1
 import dash_ag_grid as dag
 
 
@@ -63,38 +63,50 @@ app.layout = dmc.MantineProvider(
             ),
 
             # Select Columnsボタン
-            dmc.Menu(
-                id="columns-selection-menu",
-                clickOutsideEvents=False,
-                closeDelay=False,
-                closeOnClickOutside=False,
-                closeOnEscape=False,
-                closeOnItemClick=False,
-                styles={"dropdown": {"background-color": "#2d3038"}},
+            dmc.Group(
                 children=[
-                    dmc.MenuTarget(
-                        dmc.Button(
-                            "Select Columns",
-                            id="open-modal-bttn",
-                            variant="light",
-                            style={
-                                "border-color": "#000000",
-                                "color": "#000000",
-                                "margin-bottom": "1em",
-                            },
-                        ),
-                    ),
-                    dmc.MenuDropdown(
+                    dmc.Menu(
+                        id="columns-selection-menu",
+                        clickOutsideEvents=False,
+                        closeDelay=False,
+                        closeOnClickOutside=False,
+                        closeOnEscape=False,
+                        closeOnItemClick=False,
+                        styles={"dropdown": {"background-color": "#2d3038"}},
                         children=[
-                            dmc.MenuItem(
-                                style={
-                                    "padding": "0",
-                                },
-                                children=layout_utils.render_columns_modal(),
+                            dmc.MenuTarget(
+                                html.Button(
+                                    "Select Columns",
+                                    id="open-modal-bttn",
+                                    # variant="light",
+                                    style={
+                                        "border-color": "#000000",
+                                        "color": "#000000",
+                                        "margin-bottom": "0.5em",
+                                    },
+                                ),
+                            ),
+                            dmc.MenuDropdown(
+                                children=[
+                                    dmc.MenuItem(
+                                        style={
+                                            "padding": "0",
+                                        },
+                                        children=layout_utils.render_columns_modal(),
+                                    ),
+                                ],
                             ),
                         ],
                     ),
+                    html.A(
+                        html.Button(
+                            "Refresh Table", 
+                            id="viz-bttn2", 
+                            style={"border-color": "#000000", "color": "#000000", "margin-bottom": "0.5em"}), 
+                            href="/"),
+                    dcc.Location(id='url', refresh=True),
                 ],
+                position="left",
             ),
 
             # テーブルのレイアウト
@@ -155,10 +167,10 @@ app.layout = dmc.MantineProvider(
             ),
             dmc.Group(
                 [
-                    dmc.Button(
+                    html.Button(
                         "Refresh Plots",
                         id="viz-bttn",
-                        variant="light",
+                        # variant="light",
                         style={
                             "border-color": "#000000",
                             "color": "#000000",

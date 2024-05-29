@@ -1,61 +1,9 @@
-import json
 import ast
-import polars as pl
-import csv
-import os
-from modules import synonyms
-import config
-
-
-def main():
-    directory = "./app_data"
-    if file_exists(directory, "llm.jsonl"):
-        # llm結果を読み込む
-        with open("./app_data/llm.jsonl") as f:
-            llm_data = [json.loads(l) for l in f.readlines()]
-    else:
-        print("llm.jsonl not found")
-        return
-    
-    if file_exists(directory, "gene.txt"):
-        # 遺伝子リストを読み込む
-        with open("./app_data/gene.txt") as f:
-            gene_list = f.read().splitlines()
-    else:
-        print("gene.txt not found")
-        return
-    if file_exists(directory, "synonyms.csv"):
-        # 事前に作成済みsynonymsのcsvファイルを読み込む
-        synonyms_df = pl.read_csv("./app_data/synonyms.csv")
-        synonyms_data = synonyms_df.to_dicts()
-    else:
-        print("creating a list of synonyms for the gene list")
-        synonyms.make_synonyms(gene_list, config.taxonomy_id, "./app_data/synonyms.csv")
-        print("synonyms.csv has been created")
-        synonyms_df = pl.read_csv("./app_data/synonyms.csv")
-        synonyms_data = synonyms_df.to_dicts()
-
-    gene_list = [gene.lower() for gene in gene_list]
-    # print(gene_list)
-    results = search_gem_llm(gene_list, llm_data, synonyms_data)
-    
-    field_name = [
-        "gene",
-        "count_targeted",
-        "count_deg",
-        "genome_editing_tools",
-        "genome_editing_events"
-    ]
-
-    with open("./app_data/llm_counts.csv", "w",) as csvfile:
-        writer = csv.DictWriter(csvfile, fieldnames=field_name)
-        writer.writeheader()
-        writer.writerows(results)
-
 
 def search_gem_llm(gene_list, llm_data, synonyms_data):
     results = []
     for gene in gene_list:
+        print(gene)
         getools = []
         geevents = []
         # llm結果の"targeted_genes"にgeneが含まれているかどうか
@@ -136,11 +84,3 @@ def search_gem_llm(gene_list, llm_data, synonyms_data):
         results.append({"gene": gene, "count_targeted": count_targeted, "count_deg": count_deg, "genome_editing_tools": getools, "genome_editing_events": geevents})
         print({"gene": gene, "count_targeted": count_targeted, "count_deg": count_deg, "genome_editing_tools": getools, "genome_editing_events": geevents})
     return results
-
-def file_exists(directory, filename):
-    filepath = os.path.join(directory, filename)
-    return os.path.isfile(filepath)
-
-
-if __name__ == "__main__":
-    main()

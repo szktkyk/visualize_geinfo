@@ -27,6 +27,7 @@ def make_synonyms(genes:list, taxid, outputfilepath):
     else:
         for gene in genes:
             synonyms = get_genesynonyms_from_genesymbol(gene, taxid)
+            gene = gene.lower()
             if type(synonyms) != list:
                 synonyms = ast.literal_eval(synonyms)
             else:
@@ -54,6 +55,7 @@ def get_genesynonyms_from_genesymbol(gene_name, taxid):
             synonyms = []
         else:
             synonyms = req_gene["reports"][0]["gene"]["synonyms"]
+            synonyms = [synonym.lower() for synonym in synonyms]
     except:
         print(f"error at synonyms from genesymbol {gene_name}...")
         synonyms = []

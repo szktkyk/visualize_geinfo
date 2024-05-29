@@ -2,6 +2,7 @@ import dash_mantine_components as dmc
 from utils.data_utils import get_filter_values
 from utils.schema_utils import VISIBLE_COLUMNS, FILTER_TYPE_DICT, VISIBLE_COLUMNS_PART2, FILTER_TYPE_DICT_PART2
 from dash import html
+import pandas as pd
 
 
 
@@ -28,14 +29,15 @@ def generate_column_defintions(columns=VISIBLE_COLUMNS):
     return data
 
 
-def generate_column_defintions_part2(columns=VISIBLE_COLUMNS_PART2):
+def generate_column_defintions_part2():
+    data = pd.read_csv("./app_data/app_scores.csv")
+    columns = data.columns.tolist()
     data = [
         {
             "field": col,
-            # "cellRenderer": RENDERER_TYPE_DICT[col],
             "sortable": True,
             "floatingFilter": True,
-            "filter": FILTER_TYPE_DICT_PART2[col],
+            "filter": "agNumberColumnFilter",
             "tooltipField": col,
         }
         for col in columns
