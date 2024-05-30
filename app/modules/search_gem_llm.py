@@ -19,7 +19,7 @@ def search_gem_llm(gene_list, llm_data, synonyms_data):
                 synonyms = synonyms
             synonyms = [s.lower() for s in synonyms]
         except:
-            print("no synonyms")
+            print(f"no synonyms for gene: {gene}")
             synonyms = []
         # print(f"synonyms: {synonyms}")
         

@@ -5,10 +5,10 @@ import xml.etree.ElementTree as ET
 selected_columns = ["gene","count_targeted","count_deg","ON_score","PD_score"]
 
 WEIGHTS = {
-    "count_targeted":0.3,
-    "count_deg":0.2,
-    "ON_score":0.4,
-    "PD_score":0.1,
+    "count_targeted":0.35,
+    "count_deg":0.15,
+    "ON_score":0.45,
+    "PD_score":0.05,
 }
 
 

@@ -46,10 +46,15 @@ def add_weight(selected_columns, df_all, jsonl_data):
         data["count_deg"] = round(data["count_deg"] * config.WEIGHTS["count_deg"], 3)
         for d in max_min:
             column_name = d["column"]
-            data[column_name] = (abs(data[column_name]) - d["min"]) / (d["max"] - d["min"])
-            data[column_name] = round(data[column_name] * config.WEIGHTS[column_name], 3)
+            # PD_scoreのように逆数にしたい場合は下記の処理を追加する
+            if column_name == "PD_score":
+                data[column_name] = ((d["max"] - data[column_name]) - d["min"]) / (d["max"] - d["min"])
+                data[column_name] = round(data[column_name] * config.WEIGHTS[column_name], 3)
+            else:
+                data[column_name] = (abs(data[column_name]) - d["min"]) / (d["max"] - d["min"])
+                data[column_name] = round(data[column_name] * config.WEIGHTS[column_name], 3)
 
-        data["total_score"] = round(data["count_targeted"] + data["count_deg"] + sum(data[col] for col in new_columns), 3)    
+        data["total_score"] = round(data["count_targeted"] + data["count_deg"] + sum(data[col] for col in new_columns), 3)   
         new_jsonl_data.append(data)
     return new_jsonl_data
 
