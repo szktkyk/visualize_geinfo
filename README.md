@@ -1,5 +1,5 @@
 # visualize_geinfo
-Visualize genome editing related information extracted using LLM
+Visualize [genome editing related information extracted using LLM](https://github.com/szktkyk/extract_geinfo)
 
 
 ## How to use
