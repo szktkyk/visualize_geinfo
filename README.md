@@ -1,5 +1,6 @@
 # visualize_geinfo
 Visualize [genome editing related information extracted using LLM](https://github.com/szktkyk/extract_geinfo)
+<img width="996" alt="visualize_geinfo_fig" src="https://github.com/szktkyk/visualize_geinfo/assets/82294709/f1db2b7a-750f-43b3-928a-d13a125af899">
 
 
 ## How to use
@@ -23,3 +24,4 @@ Visualize [genome editing related information extracted using LLM](https://githu
 1. Visualize data
     - `docker run --rm -it -v $(pwd):/app -p 8050:8050 visualize_geinfo python ./app/app.py`
     - Access `http://0.0.0.0:8050/`
+
