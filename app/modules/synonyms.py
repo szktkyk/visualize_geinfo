@@ -6,10 +6,11 @@ import csv
 
 
 def make_synonyms(genes:list, taxid, outputfilepath):
-    # 遺伝子txtファイルの読み込み
-    # aliasをリスト化しておく
+    """
+    This function creates a list of synonyms for the gene list.
+    """
     synonyms_data = []
-    # geneidの場合
+    # for geneid
     if re.match(r"^\d+$", genes[0]):
         geneids = genes
         for geneid in geneids:
@@ -23,7 +24,7 @@ def make_synonyms(genes:list, taxid, outputfilepath):
             synonyms_data.append({"gene": genename,"synonyms": synonyms})
             print({"gene": genename,"synonyms": synonyms})
     
-    # gene symbolの場合    
+    # for gene symbol 
     else:
         for gene in genes:
             synonyms = get_genesynonyms_from_genesymbol(gene, taxid)

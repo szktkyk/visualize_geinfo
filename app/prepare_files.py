@@ -15,7 +15,7 @@ import config
 def main():
     directory = "./app_data"
     if file_exists(directory, "llm.jsonl"):
-        # llm結果を読み込む
+        # load llm data
         with open("./app_data/llm.jsonl") as f:
             llm_data = [json.loads(l) for l in f.readlines()]
     else:
@@ -23,14 +23,14 @@ def main():
         return
     
     if file_exists(directory, "gene.txt"):
-        # 遺伝子リストを読み込む
+        # load gene list
         with open("./app_data/gene.txt") as f:
             gene_list = f.read().splitlines()
     else:
         print("gene.txt not found")
         return
     if file_exists(directory, "synonyms.csv"):
-        # 事前に作成済みsynonymsのcsvファイルを読み込む
+        # load synonyms data
         synonyms_df = pl.read_csv("./app_data/synonyms.csv")
         synonyms_data = synonyms_df.to_dicts()
     else:
@@ -61,13 +61,13 @@ def main():
             writer.writeheader()
             writer.writerows(results)
         
-    # llm_counts.csvを読み込む
+    # load llm_counts.csv
     df_llm_counts = pl.read_csv("./app_data/llm_counts.csv")
     df_llm_counts = df_llm_counts.with_columns(df_llm_counts["gene"].str.to_uppercase().alias("gene"))
     # print(df_llm_counts.height)
 
     if file_exists(directory, "score.tsv"):
-        # score.tsvを読み込む
+        # load score data
         # file = glob.glob(os.path.join("./app_data", "score*"))
         # if file[0].endswith(".tsv"):
         df_score = pl.read_csv("./app_data/score.tsv", sep="\t")
@@ -94,14 +94,21 @@ def main():
         weighted_jsonl_data = weight_score.add_weight(config.selected_columns, selected_df, jsonl_data)
         df_weighted = pl.DataFrame(weighted_jsonl_data)
         df = selected_df.join(df_weighted, on="gene", how="inner")
+        new_columns = []
+        for col in df.columns:
+            if col.endswith("_right"):
+                new_columns.append(col.replace("_right", "_weighted"))
+            else:
+                new_columns.append(col)  
+        df.columns = new_columns
         df.write_csv("./app_data/app_scores.csv")
-
+        
     if file_exists(directory, "output.arrow"):
         print("output.arrow already exists")
 
     else:
-        # output.arrowを作成する
-        # llm結果がリストになっているので、strに変換する
+        # create output.arrow
+        # covert it to str 
         if file_exists("./app_data", "llm_str.jsonl"):
             df_llm = pl.read_ndjson("./app_data/llm_str.jsonl")
 
@@ -118,15 +125,14 @@ def main():
                 new_jsonl_list.append(jsonl)
             with open('./app_data/llm_str.jsonl', 'w') as f:
                 f.writelines([json.dumps(l) for l in new_jsonl_list])
-            df_llm = pl.read_ndjson("./app_data/llm_str.jsonl")
-        # arrowファイルの書き出し   
+            df_llm = pl.read_ndjson("./app_data/llm_str.jsonl")  
         df_llm.write_ipc("./app_data/output.arrow")
 
     if file_exists(directory, "scores.arrow"):
         print("scores.arrow already exists")
 
     else:
-        # scores.arrowを作成する
+        # create scores.arrow
         df_score = pl.read_csv("./app_data/app_scores.csv")
         df_score.write_ipc("./app_data/scores.arrow")  
     

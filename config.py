@@ -3,6 +3,7 @@ import datetime
 import xml.etree.ElementTree as ET
 
 selected_columns = ["gene","count_targeted","count_deg","ON_score","PD_score"]
+score_invert = ["PD_score"]
 
 WEIGHTS = {
     "count_targeted":0.35,

@@ -1,6 +1,19 @@
-# PMIDのフィルターをどうするか
-# genesymbolとかPMIDとかはリンクをつけたい
-# pubdateもフィルタリングできると嬉しい
+import sys
+import os
+
+# Add the parent directory to the system path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
+
+import config
+
+new_columns = []
+for column in config.selected_columns:
+    if column != "gene" and column != "count_targeted" and column != "count_deg":
+        new_columns.append(column)
+    else:
+        pass
+
+
 FILTER_TYPE_DICT = {
     "pmid": "agTextColumnFilter",
     "targeted_genes": "agTextColumnFilter",
@@ -17,15 +30,15 @@ FILTER_TYPE_DICT_PART2 = {
     "gene":"agTextColumnFilter",
     "count_targeted":"agNumberColumnFilter",
     "count_deg":"agNumberColumnFilter",
-    "ON_score":"agNumberColumnFilter",
-    "PD_score":"agNumberColumnFilter",
-    "count_targeted_right":"agNumberColumnFilter",
-    "count_deg_right":"agNumberColumnFilter",
-    "ON_score_right":"agNumberColumnFilter",
-    "PD_score_right":"agNumberColumnFilter",
-    "total_score":"agNumberColumnFilter"
+    "count_targeted_weighted":"agNumberColumnFilter",
+    "count_deg_weighted":"agNumberColumnFilter",
+    "total_score":"agNumberColumnFilter",
 }
 
+for column in new_columns:
+    FILTER_TYPE_DICT_PART2[column] = "agNumberColumnFilter"
+    FILTER_TYPE_DICT_PART2[f"{column}_weighted"] = "agNumberColumnFilter"
+    
 
 VISIBLE_COLUMNS = [
     "pmid",
@@ -44,11 +57,11 @@ VISIBLE_COLUMNS_PART2 = [
     "gene",
     "count_targeted",
     "count_deg",
-    "ON_score",
-    "PD_score",
-    "count_targeted_right",
-    "count_deg_right",
-    "ON_score_right",
-    "PD_score_right",
+    "count_targeted_weighted",
+    "count_deg_weighted",
     "total_score"
 ]
+
+for column in new_columns:
+    VISIBLE_COLUMNS_PART2.append(column)
+    VISIBLE_COLUMNS_PART2.append(f"{column}_weighted")

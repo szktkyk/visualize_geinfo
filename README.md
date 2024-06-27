@@ -11,10 +11,11 @@ Visualize [genome editing related information extracted using LLM](https://githu
         <!-- - Only columns with names ending in `_score` will be loaded in this application. Please see the example in this GitHub.repository. -->
     - `synonyms.csv`: csv file that was created when running [extract_geinfo](https://github.com/szktkyk/extract_geinfo)
         - If you do not have this, it will be automatically created in this application.
-1. Fill in the `selected_columns` and `WEIGHTS` in `config/config.py`
+1. Fill in the `selected_columns`, `WEIGHTS`, `score_invert` in `config/config.py`
     - For `selected_columns`, include `gene`, `count_targeted`, and `count_deg` as fixed entries, and add any additional column names from score.tsv that you wish to include.
     - For `WEIGHTS`, assign weights to each score, including the additional scores, so that their total equals 1.
-    - Please see the example in this GitHub repository.
+    - For `score_invert`, select and add a column_name that should be normalized and weighted with inverse (smaller number with more weight).
+    - Please see the [example](https://github.com/szktkyk/visualize_geinfo/blob/main/config.py) in this GitHub repository.
 1. Build Docker image
     - `docker build -t visualize_geinfo .`
 1. Create other necessary files

@@ -1,15 +1,27 @@
 import ast
 
 def search_gem_llm(gene_list, llm_data, synonyms_data):
+    """
+    Parameters
+    
+    gene_list : list
+        List of gene symbols
+        
+    llm_data : list
+        List of dictionaries containing LLM data (jsonl)
+    
+    synonyms_data : list
+        List of dictionaries containing gene synonyms
+    
+    This function will search for the gene symbols in the LLM data and count the number of targeted genes and DEGs.
+    """
     results = []
     for gene in gene_list:
         print(gene)
         getools = []
         geevents = []
-        # llm結果の"targeted_genes"にgeneが含まれているかどうか
         count_targeted = 0
         count_deg = 0
-        # synonymsを取得
         target_dict = next((item for item in synonyms_data if item.get("gene") == gene), None)
         try:
             synonyms = target_dict["synonyms"]

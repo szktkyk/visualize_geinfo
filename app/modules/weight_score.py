@@ -1,5 +1,3 @@
-# TODO: 汎用性がないので書き換える
-
 import polars as pl
 import json
 import csv
@@ -7,6 +5,10 @@ import config
 
 
 def add_weight(selected_columns, df_all, jsonl_data):
+    """
+    This function calculates the total score of each gene based on the selected columns and the weights of each column.
+    
+    """
     
     new_columns = []
     for column in selected_columns:
@@ -16,20 +18,18 @@ def add_weight(selected_columns, df_all, jsonl_data):
             pass
     
     
-    # count_targetedの最大値と最小値を求める
+    # Find the maximum and minimum values of count_targeted
     count_list = df_all["count_targeted"].to_list()
     max_count_targeted = max(count_list)
     min_count_targeted = min(count_list)
-    # max_min.append({"column":"count_targeted", "max":max_count_targeted, "min":min_count_targeted})
 
-    # count_degの最大値と最小値を求める
+    # Find the maximum and minimum values of count_deg
     count_deg_list = df_all["count_deg"].to_list()
     max_count_deg = max(count_deg_list)
     min_count_deg = min(count_deg_list)
-    # max_min.append({"column":"count_deg", "max":max_count_deg, "min":min_count_deg})
 
     max_min = []
-    # 残りのcolumnsの最大値と最小値を求める
+    # Find the maximum and minimum values of the remaining columns
     for column in new_columns:
         column_list = df_all[column].to_list()
         max_column = max(column_list)
@@ -39,15 +39,15 @@ def add_weight(selected_columns, df_all, jsonl_data):
 
     new_jsonl_data = []
     for data in jsonl_data:
-        # countの最大値からcountを引いた値を新しいcountとする
+        # Max-min normalization
+        # for count_targeted, less is better. so, we subtract the count from the maximum value of count_targeted
         data["count_targeted"] = ((max_count_targeted - data["count_targeted"]) - min_count_targeted) / (max_count_targeted - min_count_targeted)
         data["count_targeted"] = round(data["count_targeted"] * config.WEIGHTS["count_targeted"], 3)
         data["count_deg"] = (data["count_deg"] - min_count_deg) / (max_count_deg - min_count_deg)
         data["count_deg"] = round(data["count_deg"] * config.WEIGHTS["count_deg"], 3)
         for d in max_min:
             column_name = d["column"]
-            # PD_scoreのように逆数にしたい場合は下記の処理を追加する
-            if column_name == "PD_score":
+            if column_name in config.score_invert:
                 data[column_name] = ((d["max"] - data[column_name]) - d["min"]) / (d["max"] - d["min"])
                 data[column_name] = round(data[column_name] * config.WEIGHTS[column_name], 3)
             else:

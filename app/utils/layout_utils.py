@@ -3,6 +3,7 @@ from utils.data_utils import get_filter_values
 from utils.schema_utils import VISIBLE_COLUMNS, FILTER_TYPE_DICT, VISIBLE_COLUMNS_PART2, FILTER_TYPE_DICT_PART2
 from dash import html
 import pandas as pd
+import config
 
 
 
@@ -37,12 +38,18 @@ def generate_column_defintions_part2():
             "field": col,
             "sortable": True,
             "floatingFilter": True,
-            "filter": "agNumberColumnFilter",
+            "filter": FILTER_TYPE_DICT_PART2[col],
             "tooltipField": col,
+            "filterParams": {
+                "suppressAndOrCondition": False,
+                "bottons": ["reset", "apply"],
+                "values": get_filter_values(col)
+                if FILTER_TYPE_DICT_PART2[col] == "agSetColumnFilter"
+                else None,
+            }
         }
         for col in columns
     ]
-    # print(data)
     return data
 
 
