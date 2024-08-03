@@ -21,9 +21,7 @@ FILTER_TYPE_DICT = {
     "species": "agSetColumnFilter",
     "genome_editing_tools": "agSetColumnFilter",
     "genome_editing_event": "agSetColumnFilter",
-    "study_context": "agTextColumnFilter",
-    "key_findings": "agTextColumnFilter",
-    "implications": "agTextColumnFilter",
+    "phenotypes": "agTextColumnFilter",
 }
 
 FILTER_TYPE_DICT_PART2 = {
@@ -47,9 +45,7 @@ VISIBLE_COLUMNS = [
     "species",
     "genome_editing_tools",
     "genome_editing_event",
-    "study_context",
-    "key_findings",
-    "implications",
+    "phenotypes"
 ]
 
 
