@@ -2,7 +2,7 @@
 Visualize genome editing related information [extracted using LLM](https://github.com/szktkyk/extract_geinfo)
 
 ## Visualization Preview
-<img width="996" alt="visualize_geinfo_fig" src="https://github.com/szktkyk/visualize_geinfo/assets/82294709/f1db2b7a-750f-43b3-928a-d13a125af899">
+<img width="996" alt="visualize_geinfo_fig" src="https://github.com/user-attachments/assets/4aa9c5d8-6d4d-4a08-865f-956ac35b7225">
 
 
 ## How to use
